@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="style1.css">
+    
+        
+</head>
+<body>
+    <header>
+        <h1>Expense Tracker</h1>
+        <nav> <ul> <li><a href="index1.html">Home</a></li>
+                <li><a href="expenses.html"> Enter Expenses</a></li>
+                <li><a href="viewexpense.html">View Expenses</a></li>
+                <li><a href="expenseChart.html">Expense Charts</a></li>
+                <LI> <a href="budget.html">Budget</a></li>
+                    <li><a href="about us.html">About Us</a></li>
+                <li><a href="feedback1.html">Feedback</a></li></ul>
+        </nav>
+    </header>
+    <div class="menu-container">
+        <button class="menu-button">⋮</button>
+        <div class="dropdown-menu">
+            
+            <a href="signup.html">Sign Up</a>
+        </div>
+    </div>
+    
+    <main>
+        <section class="tracker">
+            <h2>Enter Your Expenses</h2>
+            <input type="date" id="expenseDate" placeholder="Expense date">
+            <input type="number" id="expenseAmount" placeholder="Amount">
+           <select id="expenseCategory">
+                <option value="food">Food</option>
+                <option value="transport">Transport</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="stationary">Stationary</option>
+                <option value="others">Others</option>
+            </select>
+            <button id="saveExpenseBtn" 
+                style="width: 200px; background: #4CAF50; color: white; font-size: 18px; padding: 10px; border: none; cursor: pointer;">
+                Save Expense
+            </button>
+            <button type="button" onclick="location.href='viewexpense.html'"
+                style="width: 200px; background: #2196F3; color: white; font-size: 18px; padding: 10px; border: none; cursor: pointer;">
+                View Expenses
+            </button>
+            
+            <h3 id="totalExpense">Total: $0</h3>
+        </section>
+       
+    </main>
+    <footer>
+        <p>&copy; 2025 Expense Tracker. All rights reserved.</p>
+    </footer>
+
+    <script>
+    document.getElementById("saveExpenseBtn").addEventListener("click", function () {
+        let date = document.getElementById("expenseDate").value;
+        let amountInput = document.getElementById("expenseAmount").value;
+        let amount = parseFloat(amountInput);
+        let category = document.getElementById("expenseCategory").value;
+
+        if (!date || amountInput === "" || isNaN(amount) || !category) {
+            alert("Please fill all fields correctly!");
+            return;
+        }
+
+        if (amount < 0) {
+            alert("You entered a negative number. Please enter a positive amount.");
+            return;
+        }
+
+        // Retrieve existing expenses from localStorage
+        let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+
+        // Add new expense
+        expenses.push({ date, amount, category });
+        localStorage.setItem("expenses", JSON.stringify(expenses));
+
+        // Show success message
+        alert(`Your expense of ₹${amount} has been saved successfully!`);
+
+        // Update total expense on this page
+        updateTotal();
+
+        // Clear input fields
+        document.getElementById("expenseDate").value = "";
+        document.getElementById("expenseAmount").value = "";
+        document.getElementById("expenseCategory").value = "food";
+    });
+
+    // Function to update total expense dynamically
+    function updateTotal() {
+        let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+        let total = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+        document.getElementById("totalExpense").innerText = `Total: ₹${total}`;
+    }
+
+    // Call updateTotal on page load
+    updateTotal();
+</script>
+
+    
+</body>
+</html>

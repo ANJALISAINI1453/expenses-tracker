@@ -1,0 +1,233 @@
+
+
+header {
+    background: #333;
+    padding: 15px;
+}
+
+header h1 {
+    margin: 0;
+    color: #ffdd57;
+}
+
+
+
+.tracker {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px auto;
+    width: 50%;
+}
+
+input, select, button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    width: 80%;
+    border-radius: 5px;
+    border: none;
+}
+
+button {
+    background: #ffdd57;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    width: 120px;
+    align:auto
+}
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #222, #ff6600);
+    color: #fff;
+    text-align: center;
+}
+
+/* Navigation Bar */
+nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px ;
+    align-items: center;
+   
+}
+
+nav h1 {
+    color: #ff6600;
+}
+
+
+
+/* Hero Section */
+.hero {
+    padding: 50px;
+}
+
+.hero h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    font-size: 18px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 20px;
+    background: #ff6600;
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    border-radius: 5px;
+    align:auto;
+}
+
+.btn:hover {
+    background: #cc5200;
+}
+
+/* Features Section */
+.features {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 40px;
+}
+
+.feature-box {
+    background: #333;
+    padding: 20px;
+    width: 250px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.feature-box h3 {
+    color: #ff6600;
+}
+
+/* Footer */
+footer {
+    background: #111;
+    padding: 15px;
+    margin-top: 20px;
+    
+}
+/* Center the navigation menu */
+nav {
+    display: flex;
+    justify-content: center; /* Centers the buttons horizontally */
+    align-items: center;
+ /* Dark background for contrast */
+    padding:  0;
+}
+
+nav ul {
+    list-style: none;
+    padding: 15px;
+    margin: 0;
+    display: flex;
+    gap: 20px; /* Spacing between buttons */
+    
+}
+
+nav ul li {
+    display: flex;
+    gap:15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    background-color: #333;
+    padding: 15px;
+    border-radius: 5px;
+    font-size: 18px;
+ 
+}
+
+nav ul li a:hover {
+    background-color: #555;
+}
+av ul {
+    display: flex;
+    justify-content: center;  /* Centers items horizontally */
+    align-items: center;      /* Centers items vertically */
+    list-style: none;
+    padding: 15px;
+}
+
+/* Style the navigation links */
+nav ul li {
+    margin: 0 20px; /* Add spacing between buttons */
+}
+
+/* Style the buttons */
+nav ul li a {
+    text-decoration: none;
+    font-size: 20px;  /* Make text larger */
+    font-weight: bold;
+    padding: 12px 20px;
+    background-color: #333; /* Button color */
+    color: white;
+    border-radius: 8px;
+    transition: 0.3s;
+    
+}
+
+/* Hover effect */
+nav ul li a:hover {
+    background-color: #ff8c00; /* Change color on hover */
+    color: #fff;
+}
+.menu-container {
+    position: absolute;
+    top: 40px;
+    right: 2px; /* Adjusted to move left */
+}
+
+.menu-button {
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: white;
+    margin-right: 1px;
+}
+.menu-button:hover {background-color: #ff8c00;
+
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background: #333;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    flex-direction: column; /* Vertical layout */
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 20px;
+    color: white;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.dropdown-menu a:hover {
+    background: orange; /* Orange hover effect */
+}
+
+.menu-container:hover .dropdown-menu {
+    display: flex;
+}

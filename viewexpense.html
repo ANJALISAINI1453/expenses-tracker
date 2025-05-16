@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>View Expenses</title>
+  <link rel="stylesheet" href="style1.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .action-button {
+      padding: 5px 10px;
+      font-size: 14px;
+      margin: 5px auto;
+      cursor: pointer;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .center-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    .summary-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 30px;
+      flex-wrap: wrap;
+      gap: 30px;
+    }
+
+    .summary-box {
+      background-color: #f8f9fa;
+      border-radius: 10px;
+      padding: 20px 30px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      min-width: 200px;
+    }
+
+    .summary-box h3 {
+      margin-bottom: 10px;
+      font-size: 1.2rem;
+      color: #333;
+    }
+
+    .summary-box span {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    #savings span {
+      color: green;
+    }
+
+    #totalExpense span {
+      color: #dc3545;
+    }
+
+    header, footer {
+      text-align: center;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Expense Tracker</h1>
+    <nav>
+      <ul>
+        <li><a href="index1.html">Home</a></li>
+        <li><a href="expenses.html">Enter Expenses</a></li>
+        <li><a href="viewexpense.html">View Expenses</a></li>
+        <li><a href="expenseChart.html">Expense Charts</a></li>
+        <LI> <a href="budget.html">Budget</a></li>
+          <li><a href="about us.html">About Us</a></li>
+        <li><a href="feedback1.html">Feedback</a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="menu-container">
+    <button class="menu-button">⋮</button>
+    <div class="dropdown-menu">
+        <a href="signup.html">Sign Up</a>
+    </div>
+</div>
+
+  <main>
+    <section>
+      <h2>Saved Expenses</h2>
+      <div class="center-container">
+        <div class="input-row">
+          <div class="input-group">
+            <label for="income">Income ₹:</label>
+            <input type="number" id="income" placeholder="Enter Income ₹" />
+          </div>
+          <div class="input-group">
+            <label for="budget">Budget ₹:</label>
+            <input type="number" id="budget" placeholder="Enter Budget ₹" />
+          </div>
+        </div>
+      </div>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Category</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="expenseTableBody">
+          <!-- Expenses will be rendered here -->
+        </tbody>
+      </table>
+
+      <div class="summary-container">
+        <div class="summary-box" id="totalExpense">
+          <h3>Total Expenses</h3>
+          <span>₹0</span>
+        </div>
+        <div class="summary-box" id="savings">
+          <h3>Your Savings</h3>
+          <span>₹0</span>
+        </div>
+      </div>
+    </section>
+
+    
+ 
+    <footer>
+      <p>&copy; 2025 Expense Tracker. All rights reserved.</p>
+    </footer>
+  </main>
+   <script>
+    let budgetInputTimer;
+    let incomeInputTimer;
+  
+    function displayExpenses() {
+      const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+      const expenseTableBody = document.getElementById("expenseTableBody");
+      let total = 0;
+      expenseTableBody.innerHTML = "";
+  
+      expenses.forEach((expense, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${expense.date}</td>
+          <td>₹<span class="amount">${expense.amount}</span></td>
+          <td>${expense.category}</td>
+          <td>
+            <button class="action-button" onclick="deleteExpense(${index})">Delete</button>
+            <button class="action-button" onclick="addAmount(${index})">Add Amount</button>
+          </td>
+        `;
+        expenseTableBody.appendChild(row);
+        total += expense.amount;
+      });
+  
+      updateTotals(total);
+      calculateSavings();
+    }
+  
+    function deleteExpense(index) {
+      const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+      expenses.splice(index, 1);
+      localStorage.setItem("expenses", JSON.stringify(expenses));
+      displayExpenses();
+    }
+  
+    function addAmount(index) {
+      const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+      const additionalAmount = parseFloat(prompt("Enter the amount to add:"));
+      if (!isNaN(additionalAmount) && additionalAmount > 0) {
+        expenses[index].amount += additionalAmount;
+        localStorage.setItem("expenses", JSON.stringify(expenses));
+        displayExpenses();
+      } else {
+        alert("Please enter a valid amount!");
+      }
+    }
+  
+    function calculateSavings() {
+      const incomeInput = document.getElementById("income");
+      const budgetInput = document.getElementById("budget");
+  
+      const income = parseFloat(incomeInput.value);
+      const budget = parseFloat(budgetInput.value);
+  
+      if (isNaN(income) || isNaN(budget)) {
+        return;
+      }
+  
+      const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+      let totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+  
+      const savings = income - totalExpenses;
+      updateTotals(totalExpenses, savings);
+  
+      // Remove all existing case classes
+      budgetInput.classList.remove("case-1", "case-2", "case-3", "case-4");
+  
+      // CASE 1
+      if (budget < income && totalExpenses > budget) {
+        if (!budgetInput.classList.contains("case-1")) {
+          alert("⚠️ You have exceeded your budget!");
+        }
+        updateBudgetStyle("red", "case-1", budgetInput);
+      }
+      // CASE 2
+      else if (budget > income && totalExpenses > budget) {
+        if (!budgetInput.classList.contains("case-2")) {
+          alert("🚨 Budget exceeds income and you’ve also overspent!");
+        }
+        updateBudgetStyle("red", "case-2", budgetInput);
+      }
+      // CASE 3
+      else if (budget > income && totalExpenses <= budget) {
+        if (!budgetInput.classList.contains("case-3")) {
+          alert("⚠️ Budget is more than your income. Be cautious!");
+        }
+        updateBudgetStyle("orange", "case-3", budgetInput);
+      }
+      
+      // CASE 4 (within budget)
+      else if (budget <= income && totalExpenses <= budget) {
+        if (!budgetInput.classList.contains("case-4")) {
+          alert("✅ You are within your budget. Good job!");
+        }
+        updateBudgetStyle("green", "case-4", budgetInput);
+      }
+    }
+  
+    function updateBudgetStyle(color, caseClass, input) {
+      input.classList.remove("case-1", "case-2", "case-3", "case-4" );
+      input.classList.add(caseClass);
+      input.style.border = "2px solid " + color;
+      input.style.backgroundColor =
+        color === "green" ? "#d4edda" :
+        color === "orange" ? "#fff3cd" :
+        "#f8d7da";
+    }
+  
+    function updateTotals(totalExpenses, savings = null) {
+      document.getElementById("totalExpense").querySelector("span").innerText = `₹${totalExpenses}`;
+      if (savings !== null) {
+        document.getElementById("savings").querySelector("span").innerText = `₹${savings}`;
+      } else {
+        document.getElementById("savings").querySelector("span").innerText = "₹0";
+      }
+    }
+  
+    window.onload = function () {
+      displayExpenses();
+  
+      const incomeField = document.getElementById("income");
+      const budgetField = document.getElementById("budget");
+  
+      incomeField.addEventListener("input", () => {
+        clearTimeout(incomeInputTimer);
+        incomeInputTimer = setTimeout(() => {
+          calculateSavings();
+        }, 900);
+      });
+  
+      budgetField.addEventListener("input", () => {
+        clearTimeout(budgetInputTimer);
+        budgetInputTimer = setTimeout(() => {
+          calculateSavings();
+        }, 900);
+      });
+    };
+  </script>
+  

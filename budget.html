@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Budget Tracker</title>
+  <link rel="stylesheet" href="style1.css">
+  <style>
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    .budget-container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-left: 20px;
+      margin-top: 40px;
+      width: 60%;
+      background-color: #333;
+      padding: 40px;
+      margin-left: 10px;
+      color: white;
+    }
+    .category-budget {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .status {
+      font-size: 0.95rem;
+      color: #333;
+      margin-bottom: 10px;
+      background-color: #eef;
+      padding: 10px;
+      border-left: 5px solid #44c;
+      border-radius: 5px;
+      color: black;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .main-layout {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 1px;
+    }
+    .tips-box {
+      width: 30%;
+      height: auto;
+      min-height: 400px;
+      background-color: #28a745;
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 5px solid #ffa500;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+      color: white;
+      margin-top: 30px;
+      margin-right: 60px;
+      margin-bottom: 30px;
+    }
+    .form-control {
+      margin-bottom: 10px;
+    }
+    .budget-info {
+      background-color: #e9e9ff;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      border-left: 5px solid #5a5ae6;
+    }
+    .btn-success {
+      margin-top: 10px;
+    }
+    @media (max-width: 768px) {
+      .main-layout {
+        flex-direction: column;
+      }
+      .budget-container,
+      .tips-box {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Expense Tracker</h1>
+    <nav>
+      <ul>
+        <li><a href="index1.html">Home</a></li>
+        <li><a href="expenses.html">Enter Expenses</a></li>
+        <li><a href="viewexpense.html">View Expenses</a></li>
+        <li><a href="expenseChart.html">Expense Charts</a></li>
+        <li><a href="budget.html">Budget</a></li>
+        <li><a href="about us.html">About Us</a></li>
+        <li><a href="feedback1.html">Feedback</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="menu-container">
+    <button class="menu-button">⋮</button>
+    <div class="dropdown-menu">
+      <a href="signup.html">Sign Up</a>
+    </div>
+  </div>
+
+  <div>
+    <h1>SET BUDGET</h1>
+  </div>
+
+  <div class="main-layout">
+    <div class="budget-container">
+      <label for="categorySelect">Select Category to View Budget</label>
+      <select id="categorySelect" onchange="showSingleCategory()">
+        <option value="all">All Categories</option>
+        <option value="food">Food</option>
+        <option value="transport">Transport</option>
+        <option value="entertainment">Entertainment</option>
+        <option value="stationary">Stationary</option>
+        <option value="others">Others</option>
+      </select>
+
+      <div id="food" class="category-budget">
+        <label for="foodBudget">Food Budget (₹)</label>
+        <input type="number" id="foodBudget" placeholder="Enter food budget">
+        <div class="status" id="foodStatus"></div>
+      </div>
+      <div id="transport" class="category-budget">
+        <label for="transportBudget">Transport Budget (₹)</label>
+        <input type="number" id="transportBudget" placeholder="Enter transport budget">
+        <div class="status" id="transportStatus"></div>
+      </div>
+      <div id="entertainment" class="category-budget">
+        <label for="entertainmentBudget">Entertainment Budget (₹)</label>
+        <input type="number" id="entertainmentBudget" placeholder="Enter entertainment budget">
+        <div class="status" id="entertainmentStatus"></div>
+      </div>
+      <div id="stationary" class="category-budget">
+        <label for="stationaryBudget">Stationary Budget (₹)</label>
+        <input type="number" id="stationaryBudget" placeholder="Enter stationary budget">
+        <div class="status" id="stationaryStatus"></div>
+      </div>
+      <div id="others" class="category-budget">
+        <label for="othersBudget">Others Budget (₹)</label>
+        <input type="number" id="othersBudget" placeholder="Enter others budget">
+        <div class="status" id="othersStatus"></div>
+      </div>
+      <button onclick="saveBudgets()">Save Budgets</button>
+    </div>
+
+    <div class="tips-box">
+      <h4>Budgeting Tips</h4>
+      <ul id="tipsContent"></ul><br>
+    </div>
+  </div>
+   <footer>
+            <p>&copy; 2025 Expense Tracker. All rights reserved.</p>
+        </footer>
+
+  <script>
+    function showSingleCategory() {
+      const selected = document.getElementById('categorySelect').value;
+      const categories = ['food', 'transport', 'entertainment', 'stationary', 'others'];
+      categories.forEach(cat => {
+        const section = document.getElementById(cat);
+        section.style.display = selected === 'all' || selected === cat ? 'block' : 'none';
+      });
+    }
+
+    function calculateExpenses() {
+      const storedExpenses = JSON.parse(localStorage.getItem('expenses')) || [];
+      const totals = { food: 0, transport: 0, entertainment: 0, stationary: 0, others: 0 };
+      storedExpenses.forEach(item => {
+        if (totals[item.category] !== undefined) {
+          totals[item.category] += parseFloat(item.amount);
+        }
+      });
+      return totals;
+    }
+
+    function updateBudgetStatus(budgets, expenses) {
+      const tips = [];
+      for (const category in budgets) {
+        const budget = parseFloat(budgets[category]);
+        const spent = expenses[category] || 0;
+        const statusId = `${category}Status`;
+        const statusEl = document.getElementById(statusId);
+
+        if (isNaN(budget)) {
+          statusEl.textContent = `⚠️ No budget set for ${category}.`;
+          tips.push(`⚠️ No budget set for ${category}.`);
+        } else {
+          const remaining = budget - spent;
+          if (remaining >= 0) {
+            statusEl.textContent = `✅ Within budget. Remaining ₹${remaining.toFixed(2)}.`;
+            tips.push(`✅ You're within budget for ${category}. Keep it up!`);
+          } else {
+            statusEl.textContent = `❌ Over budget by ₹${Math.abs(remaining).toFixed(2)}.`;
+            tips.push(`❌ You've exceeded the ${category} budget. Consider adjusting your spending.`);
+          }
+        }
+      }
+
+      const tipsList = document.getElementById('tipsContent');
+      tipsList.innerHTML = '';
+      tips.forEach(tip => {
+        const li = document.createElement('li');
+        li.textContent = tip;
+        tipsList.appendChild(li);
+      });
+
+      tipsList.innerHTML += `
+        <li>💡 Track your expenses weekly to stay informed.</li><br>
+        <li>💡 Allocate savings before setting other budgets.</li><br>
+        <li>💡 Always leave a buffer for unexpected expenses.</li><br>
+        <li>💡 Use historical spending to adjust your budget realistically.</li><br>
+      `;
+    }
+
+    function saveBudgets() {
+      const budgets = {
+        food: parseFloat(document.getElementById('foodBudget').value),
+        transport: parseFloat(document.getElementById('transportBudget').value),
+        entertainment: parseFloat(document.getElementById('entertainmentBudget').value),
+        stationary: parseFloat(document.getElementById('stationaryBudget').value),
+        others: parseFloat(document.getElementById('othersBudget').value)
+      };
+      localStorage.setItem('categoryBudgets', JSON.stringify(budgets));
+      const expenses = calculateExpenses();
+      updateBudgetStatus(budgets, expenses);
+    }
+
+    window.onload = () => {
+      showSingleCategory();
+      const budgets = JSON.parse(localStorage.getItem('categoryBudgets')) || {};
+      const expenses = calculateExpenses();
+
+      document.getElementById('foodBudget').value = budgets.food ?? '';
+      document.getElementById('transportBudget').value = budgets.transport ?? '';
+      document.getElementById('entertainmentBudget').value = budgets.entertainment ?? '';
+      document.getElementById('stationaryBudget').value = budgets.stationary ?? '';
+      document.getElementById('othersBudget').value = budgets.others ?? '';
+
+      updateBudgetStatus(budgets, expenses);
+
+      ['foodBudget', 'transportBudget', 'entertainmentBudget', 'stationaryBudget', 'othersBudget'].forEach(id => {
+        document.getElementById(id).addEventListener('change', saveBudgets);
+      });
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback</title>
+    <link rel="stylesheet" href="style1.css">
+    
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            resize: none;
+        }
+
+        button {
+            background: orange;
+            color: black;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: darkorange;
+        }
+
+        .contact {
+            background: black;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .contact p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Expense Tracker</h1>
+        <nav>
+            <ul> <li><a href="index1.html">Home</a></li>
+                <li><a href="expenses.html">Enter Expenses</a></li>
+                <li><a href="viewexpense.html">View Expenses</a></li>
+                <li><a href="expenseChart.html">Expense Charts</a></li>
+                <LI> <a href="budget.html">Budget</a></li>
+                    <li><a href="about us.html">About Us</a></li>
+                <li><a href="feedback1.html">Feedback</a></li> </ul>
+        </nav>
+    </header>
+    <div class="menu-container">
+        <button class="menu-button">⋮</button>
+        <div class="dropdown-menu">
+            
+            <a href="signup.html">Sign Up</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1>Submit Your Feedback</h1>
+        <p>We appreciate your feedback! Let us know how we can improve.</p>
+
+        <form id="feedbackForm">
+            <textarea id="feedbackInput" placeholder="Enter your feedback here..." required></textarea>
+            <button type="submit">Submit</button>
+        </form>
+
+        <h2>Feedback</h2>
+        <ul id="feedbackList"></ul>
+    </div>
+
+    <div class="contact">
+        <h2>Contact Us</h2>
+        <p>Email: support@expensetracker.com</p>
+        <p>Phone: +123-456-7890</p>
+    </div>
+    
+
+    <script>
+        // Function to load feedback from localStorage
+        function loadFeedback() {
+            
+        }
+
+        // Event listener for form submission
+        document.getElementById("feedbackForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            let feedback = document.getElementById("feedbackInput").value.trim();
+            if (feedback === "") return;
+
+            // Save feedback to localStorage
+            let feedbackList = JSON.parse(localStorage.getItem("feedback")) || [];
+            feedbackList.push(feedback);
+            localStorage.setItem("feedback", JSON.stringify(feedbackList));
+
+            // Clear input and reload feedback
+            document.getElementById("feedbackInput").value = "";
+            loadFeedback();
+            alert("Thanks for your feedback!");
+        });
+
+        // Load feedback when the page is loaded
+        loadFeedback();
+    </script>
+
+</body>
+</html>

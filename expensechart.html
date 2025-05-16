@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Expense Charts</title>
+  <link rel="stylesheet" href="style1.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header, footer {
+      text-align: center;
+      padding: 10px;
+    }
+
+    nav ul li {
+      margin: 0 20px;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: bold;
+      padding: 12px 20px;
+      background-color: #333;
+      color: white;
+      border-radius: 8px;
+      
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover {
+      background-color: #ff8c00;
+      color: #fff;
+    }
+
+    
+    main {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      padding: 20px;
+    }
+
+    .left-panel {
+      flex: 0 0 65%;
+      min-width: 300px;
+    }
+
+    .right-panel {
+      margin-right: 200px;
+      background-color:#333;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-bottom: 500px;
+      margin-top: 100px;
+    }
+
+    #chartContainer {
+      width: 100%;
+      height: 400px;
+      background-color: aliceblue;
+      border-radius: 10px;
+      padding: 10px;
+      margin: auto;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 15px;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 8px 16px;
+      background-color: orange;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 14px;
+      margin: 5px;
+    }
+
+    button:hover {
+      background-color: darkorange;
+    }
+
+    .filter-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .filter-section input {
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .filter-section button {
+      background-color: #28a745;
+    }
+
+    .filter-section button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Expense Tracker</h1>
+    <nav>
+      <ul>
+        <li><a href="index1.html">Home</a></li>
+        <li><a href="expenses.html">Enter Expenses</a></li>
+        <li><a href="viewexpense.html">View Expenses</a></li>
+        <li><a href="expenseChart.html">Expense Charts</a></li>
+        <LI> <a href="budget.html">Budget</a></li>
+          <li><a href="about us.html">About Us</a></li>
+        <li><a href="feedback1.html">Feedback</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="menu-container">
+    <button class="menu-button">⋮</button>
+    <div class="dropdown-menu">
+      <a href="signup.html">Sign Up</a>
+    </div>
+  </div>
+
+  <main>
+    <div class="left-panel">
+      <div class="button-container">
+        <button onclick="showChart('daily')">Daily</button>
+        <button onclick="showChart('weekly')">Weekly</button>
+        <button onclick="showChart('monthly')">Monthly</button>
+        <button onclick="showChart('yearly')">Yearly</button>
+      </div>
+      <div id="chartContainer">
+        <canvas id="expenseChart"></canvas>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <h3>Custom Date Filter</h3>
+      <div class="filter-section">
+        <label>From:</label>
+        <input type="date" id="startDate">
+        <label>To:</label>
+        <input type="date" id="endDate">
+        <button onclick="applyCustomFilter()">Apply Filter</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Expense Tracker. All rights reserved.</p>
+  </footer>
+
+  <script>
+    let expenseChart;
+
+    function showChart(period, customRange = null) {
+      const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+
+      const labelsSet = new Set();
+      const categorySet = new Set();
+      const dataMap = {};
+
+      expenses.forEach(expense => {
+        const date = new Date(expense.date);
+        if (customRange) {
+          const start = new Date(customRange.start);
+          const end = new Date(customRange.end);
+          if (date < start || date > end) return;
+        }
+
+        let label;
+        switch (period) {
+          case 'daily':
+            label = date.toLocaleDateString();
+            break;
+          case 'weekly':
+            label = `Week ${getWeekNumber(date)} (${date.getFullYear()})`;
+            break;
+          case 'monthly':
+            label = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+            break;
+          case 'yearly':
+            label = date.getFullYear().toString();
+            break;
+          case 'custom':
+            label = date.toLocaleDateString();
+            break;
+        }
+
+        labelsSet.add(label);
+        const category = expense.category || "Uncategorized";
+        categorySet.add(category);
+
+        if (!dataMap[label]) dataMap[label] = {};
+        if (!dataMap[label][category]) dataMap[label][category] = 0;
+        dataMap[label][category] += expense.amount;
+      });
+
+      const labels = Array.from(labelsSet).sort((a, b) => new Date(a) - new Date(b));
+      const categories = Array.from(categorySet);
+      const colors = generateColors(categories.length);
+
+      const datasets = categories.map((category, index) => ({
+        label: category,
+        data: labels.map(label => dataMap[label]?.[category] || 0),
+        backgroundColor: colors[index]
+      }));
+
+      if (expenseChart) {
+        expenseChart.destroy();
+      }
+
+      const ctx = document.getElementById('expenseChart').getContext('2d');
+      expenseChart = new Chart(ctx, {
+        type: 'bar',
+        data: { labels, datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: true, position: 'top' },
+            datalabels: {
+              anchor: 'end',
+              align: 'start',
+              formatter: (value, context) =>
+                value > 0 ? `${context.dataset.label}: ₹${value}` : '',
+              color: '#000',
+              font: { weight: 'bold' }
+            },
+            tooltip: { enabled: false }
+          },
+          scales: {
+            x: {
+              stacked: true,
+              title: {
+                display: true,
+                text: period.charAt(0).toUpperCase() + period.slice(1)
+              }
+            },
+            y: {
+              stacked: true,
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Amount (₹)'
+              }
+            }
+          }
+        },
+        plugins: [ChartDataLabels]
+      });
+    }
+
+    function getWeekNumber(date) {
+      const startDate = new Date(date.getFullYear(), 0, 1);
+      const days = Math.floor((date - startDate) / (24 * 60 * 60 * 1000));
+      return Math.ceil((days + startDate.getDay() + 1) / 7);
+    }
+
+    function generateColors(count) {
+      const colors = [];
+      for (let i = 0; i < count; i++) {
+        const r = Math.floor(Math.random() * 255);
+        const g = Math.floor(Math.random() * 255);
+        const b = Math.floor(Math.random() * 255);
+        colors.push(`rgba(${r}, ${g}, ${b}, 0.7)`);
+      }
+      return colors;
+    }
+
+    function applyCustomFilter() {
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      if (!startDate || !endDate) {
+        alert('Please select both start and end dates.');
+        return;
+      }
+      showChart('custom', { start: startDate, end: endDate });
+    }
+
+    window.onload = function () {
+      showChart('monthly');
+    };
+  </script>
+</body>
+</html>
