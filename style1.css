@@ -55,7 +55,7 @@ button {
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 0;
+    padding: auto;
     background: linear-gradient(to bottom, #222, #ff6600);
     color: #fff;
     text-align: center;
@@ -244,5 +244,15 @@ nav ul li a:hover {
 
 .menu-container:hover .dropdown-menu {
     display: flex;
+}
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.card {
+  flex: 1 1 calc(50% - 1rem); /* 2 cards per row on mobile */
+  min-width: 250px;
 }
 
