@@ -1,3 +1,17 @@
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  .card {
+    width: 100%; /* full width on mobile */
+    margin-bottom: 15px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+}
 
 
 header {
@@ -231,3 +245,4 @@ nav ul li a:hover {
 .menu-container:hover .dropdown-menu {
     display: flex;
 }
+
