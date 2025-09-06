@@ -80,4 +80,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initial display of expenses
     displayExpenses("All");
+
+});
+const toggle = document.querySelector('.menu-toggle');
+const navLinks = document.querySelector('.nav-links');
+
+toggle.addEventListener('click', () => {
+  navLinks.classList.toggle('active');
 });
